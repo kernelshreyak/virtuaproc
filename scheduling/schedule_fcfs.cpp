@@ -65,7 +65,7 @@ int main()
             wt[i]=tat[i]-pr_q[i].pt;
         }
 
-        printf("\nP%d\t\t  %d\t\t    %d\t\t\t%d",i+1,pr_q[i].pt,tat[i],wt[i]);
+        printf("\nP%d\t\t  %d\t\t    %d\t\t\t%d",pr_q[i].pid,pr_q[i].pt,tat[i],wt[i]);
     }
 
     //calculate values
