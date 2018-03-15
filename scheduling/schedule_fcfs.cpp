@@ -41,7 +41,7 @@ int main()
         wt[i]=0;  //initialize waiting time of all processes to zero
         cout<<"Enter processing time of Process"<<i+1<<":";
         cin>>pr_q[i].pt;
-        pr_q.pid=i+1;  //set PID of process
+        pr_q[i].pid=i+1;  //set PID of process
     }
 
     cout<<endl;
@@ -81,8 +81,8 @@ int main()
     avg_wt/=N;
     tput=N/T; //the throughput
 
+    cout<<"\n\nTotal Time:"<<T<<endl;
     cout<<"\nAverage Turnaround Time:"<<avg_tat<<endl;
     cout<<"\nAverage Waiting Time:"<<avg_wt<<endl;
-    cout<<"\nThroughput:"<<tput<<endl;
     return 0;
 }

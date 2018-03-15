@@ -26,14 +26,36 @@ int execute(process p)  //executes a process return 1 if execution finished else
     return 1;
 }
 
+void swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void sort_processes(int proc_times[N], int pids[N])  //sorts an array of processes (PIDs) based on Processing times using basic sorting
+{
+    int i,j,min,tmp;
+    for(i=0;i<N;i++)
+    {
+        min=i;
+        for(j=i+1;j<N;j++)
+            if(proc_times[j] < proc_times[min])
+                min=j;
+        swap(&pids[min],&pids[i]);  //swap the PIDs
+    }
+}
+
+
 int main()
 {
     int wt[N],  //waiting time of processes
         tat[N], //turnaround time of processes
-        i;
+        i,s_pr[N],pts[N];
     float avg_wt,avg_tat,tput;
 
     process pr_q[N];  //the ready-queue of processes
+
 
 
     cout<<"----------------SJF Schedule Simulation----------------------"<<endl;
@@ -42,10 +64,21 @@ int main()
         wt[i]=0;  //initialize waiting time of all processes to zero
         cout<<"Enter processing time of Process"<<i+1<<":";
         cin>>pr_q[i].pt;
-        pr_q.pid=i+1;  //set PID of process
+        pr_q[i].pid=i+1;  //set PID of process
     }
 
+    for(i=0;i<N;i++)
+        pts[i]=pr_q[i].pt;  //processing times of processes
+
+    for(i=0;i<N;i++)
+        s_pr[i]=pr_q[i].pid;
+
+    //sort the processes in increasing order of processing time
+    sort_processes(pts,s_pr);
+
+
     cout<<endl;
+
 
     for(i=0;i<N;i++)
     {
@@ -54,19 +87,26 @@ int main()
     }
 
 
+    cout<<"\nSorted PIDs:";
+    for(i : s_pr)
+    {
+        cout<<i<<" ";
+    }
 
-    cout<<"\nProcess\t\tExec Time\tTurnaround Time\tWaiting Time";
+    cout<<"\n\nProcess\t\tExec Time\tTurnaround Time\tWaiting Time";
 
     //execute processes
+    process curr_proc;
     for(i=0;i<N;i++)
     {
-        if(execute(pr_q[i])==1)
+        curr_proc=pr_q[s_pr[i]-1]; //get the current process
+        if(execute(curr_proc)==1)
         {
-            tat[i]=T-pr_q[i].art;
-            wt[i]=tat[i]-pr_q[i].pt;
+            tat[i]=T-curr_proc.art;
+            wt[i]=tat[i]-curr_proc.pt;
         }
 
-        printf("\nP%d\t\t  %d\t\t    %d\t\t\t%d",i+1,pr_q[i].pt,tat[i],wt[i]);
+        printf("\nP%d\t\t  %d\t\t    %d\t\t\t%d",pr_q[i].pid,pr_q[i].pt,tat[i],wt[i]);
     }
 
     //calculate values
@@ -82,8 +122,9 @@ int main()
     avg_wt/=N;
     tput=N/T; //the throughput
 
+    cout<<"\n\nTotal Time:"<<T<<endl;
     cout<<"\nAverage Turnaround Time:"<<avg_tat<<endl;
     cout<<"\nAverage Waiting Time:"<<avg_wt<<endl;
-    cout<<"\nThroughput:"<<tput<<endl;
+
     return 0;
 }
